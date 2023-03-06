@@ -16,7 +16,8 @@ $(SolutionDir)Dependencies\GLFW\include
 链接器->常规->附加库目录->$(SolutionDir)Dependencies\GLFW\lib-vc2022
 	->输入->全部删掉->添加glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;
 （因为上一步全删，所以需要补足后面的几个）
-
+![image](https://user-images.githubusercontent.com/66365279/223052592-af19b4ca-b574-429a-87b4-bbdc82eb338f.png)
 复制-Documentation | GLFW
 这个代码，爆红的话，编译环境切换到32位，和上面glfw的保持一致
 
+![image](https://user-images.githubusercontent.com/66365279/223052634-a73ecd59-25c2-4ea5-9b8d-6486dd9e156e.png)
