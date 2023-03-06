@@ -1,4 +1,10 @@
+/*fatal  error C1189: #error:  gl.h included before glew.h   需要放到前面*/
+#include <GL/glew.h>
+
 #include <GLFW/glfw3.h>
+
+#include <iostream>
+
 int main(void)
 {
     GLFWwindow* window;
@@ -6,6 +12,7 @@ int main(void)
     /* Initialize the library */
     if (!glfwInit())
         return -1;
+  
 
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
@@ -17,6 +24,15 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+
+
+    /*初始化 glew  需要放在 glfwMakeContextCurrent  创建上下文之后*/
+    if (glewInit() != GLEW_OK)
+        std::cout << "Error " << std::endl;
+
+    /*获取版本*/
+    std::cout << glGetString(GL_VERSION) << std::endl;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
