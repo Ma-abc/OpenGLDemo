@@ -41,3 +41,27 @@ glShaderSource()  --length-> nullptr,以null结尾----每个字符都认定以nu
 ![image](https://user-images.githubusercontent.com/66365279/223400269-c3d1818a-3946-4bc8-93c9-30efebaddf74.png)
 
 ![image](https://user-images.githubusercontent.com/66365279/223400309-b2a59bec-8ee7-4404-9dc3-a4ae51e00d29.png)
+
+
+索引缓冲区  ： 任何缓冲区，都必须由无符号的整数组成
+
+关于错误检查
+
+1、glGetError ---三种不同类型的错误标志，最兼容
+
+（每个函数前清除错误，然后调用函数后使用glGetError获取是否有错误）
+
+2、opengl 4.3中 添加了，glDebugMessageCall
+
+1需要不停主动调用，2发生错误时被动通知
+
+Uniforms
+
+如果shader里的uniform没有使用，会被剥离，就会返回-1
+
+glfwSwapInterval()---设置刷新帧率
+
+关于glsl--错误
+
+![image](https://user-images.githubusercontent.com/66365279/223693142-dfc56096-2c74-4af9-addf-34e079d002e7.png)
+
