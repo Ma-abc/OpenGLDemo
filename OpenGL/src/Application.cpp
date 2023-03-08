@@ -136,11 +136,12 @@ int main(void)
     /**
     * Opengl中生成的所有东西都会被分配一个唯一的标识符(整数) 
     */
-    //3个顶点坐标
-    float positions[6] = {
+    //6个顶点坐标
+    float positions[8] = {
         -0.5f, -0.5f,
-         0.0f,  0.5f,
-         0.5f, -0.5f
+         0.5f, -0.5f,
+         0.5f,  0.5f,
+        -0.5f,  0.5f,
     };
 
     /* 创建缓冲区 */
@@ -157,8 +158,18 @@ int main(void)
         GL_STREAM_DRAW ：数据每次绘制时都会改变。
     */
     /* 指定数据 :大小以字节为单位 , 数据可以传入null*/
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positions) * sizeof(float), positions, GL_STATIC_DRAW);
 
+
+    /* 索引缓冲区 */
+    unsigned int indices[] = {
+        0,1,2,
+        2,3,0
+    };
+    unsigned int ibo;
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);//数组，缓冲区
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * sizeof(int), indices, GL_STATIC_DRAW);
 
 
     /* 启用顶点属性 */
@@ -188,8 +199,9 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
 
-        /* 绘制三角形 : glDrawArrays() 没有索引缓冲区时用的方法      glDrawElements()：有索引缓冲区时用的方法 */
-        glDrawArrays(GL_TRIANGLES,0,3); //0-first偏移   3-数量
+        /* 绘制矩形 : glDrawArrays() 没有索引缓冲区时用的方法      glDrawElements()：有索引缓冲区时用的方法 */
+        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT,nullptr);//已经在glBindBuffer设置，这里给nullptr
+        //glDrawArrays(GL_TRIANGLES,0, sizeof(positions) / 2); //0-first偏移   6-数量
         //GL_POINTS、GL_TRIANGLES、GL_LINE_STRIP。
 
 
