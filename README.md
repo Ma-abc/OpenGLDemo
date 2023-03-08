@@ -16,3 +16,5 @@ demo-idea:配置环境和glfw
 demo-glew:配置glew
 
 demo-shader:着色器
+
+  (着色器、索引缓冲、问题排查、Uniforms)
