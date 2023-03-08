@@ -8,6 +8,51 @@
 #include <string>
 #include <sstream>
 
+
+//断言
+#define ASSERT(x) if(!(x)) __debugbreak();
+//添加函数，文件，和错误行信息
+#define GLCall(x) GLClearError();\
+    x;\
+    ASSERT(GLLogCall2(#x, __FILE__, __LINE__))
+
+
+
+/* 清除错误 */
+static void GLClearError()
+{
+    while (glGetError() != GL_NO_ERROR);
+}
+/* 检查错误  错误码需要转换成十六进制 */
+static void GLCheckError()
+{
+    while(GLenum error = glGetError())
+    {
+        std::cout << "[OpenGL error ] (" << error << " )" << std::endl;
+    }
+}
+
+static bool GLLogCall2(const char* function, const char* file, int line)
+{
+    while (GLenum error = glGetError())
+    {
+        std::cout << "[OpenGL error ] (" << error << " )" << function <<
+            " " << file << ":" << line << std::endl;
+        return false;
+    }
+    return true;
+}
+static bool GLLogCall()
+{
+    while (GLenum error = glGetError())
+    {
+        std::cout << "[OpenGL error ] (" << error << " )" << std::endl;
+        return false;
+    }
+    return true;
+}
+
+
 struct ShaderPogramSource
 {
     std::string VertexSource;
@@ -200,9 +245,20 @@ int main(void)
 
 
         /* 绘制矩形 : glDrawArrays() 没有索引缓冲区时用的方法      glDrawElements()：有索引缓冲区时用的方法 */
-        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT,nullptr);//已经在glBindBuffer设置，这里给nullptr
+        //glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT,nullptr);//1-任何缓冲区，都必须由无符号的整数组成,2-已经在glBindBuffer设置，这里给nullptr
         //glDrawArrays(GL_TRIANGLES,0, sizeof(positions) / 2); //0-first偏移   6-数量
         //GL_POINTS、GL_TRIANGLES、GL_LINE_STRIP。
+
+
+        /*  错误操作 演示  */
+        //GLClearError(); 
+        //glDrawElements(GL_TRIANGLES, sizeof(indices), GL_INT, nullptr);//1-任何缓冲区，都必须由无符号的整数组成,2-已经在glBindBuffer设置，这里给nullptr
+        //GLCheckError();//第一种，直接调试错误行
+        //ASSERT(GLLogCall());//第二种，出现错误中断调试
+
+        /* 第三种 */
+        GLCall(glDrawElements(GL_TRIANGLES, sizeof(indices), GL_INT, nullptr));
+
 
 
         /* Swap front and back buffers */
