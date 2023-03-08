@@ -168,6 +168,8 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
+    /* 闪屏、刷新频率 */
+    glfwSwapInterval(1);
 
 
     /*初始化 glew  需要放在 glfwMakeContextCurrent  创建上下文之后*/
@@ -212,9 +214,9 @@ int main(void)
         2,3,0
     };
     unsigned int ibo;
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);//数组，缓冲区
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * sizeof(int), indices, GL_STATIC_DRAW);
+    GLCall(glGenBuffers(1, &ibo));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));//数组，缓冲区
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * sizeof(int), indices, GL_STATIC_DRAW));
 
 
     /* 启用顶点属性 */
@@ -235,20 +237,40 @@ int main(void)
 
     unsigned int program = CreateShader(source.VertexSource, source.FragmentSource);
     /* 绑定着色器 */
-    glUseProgram(program);
+    GLCall(glUseProgram(program));
+
+    /**
+    * ==============  关于Uniform
+    */
+    GLCall(int location = glGetUniformLocation(program, "u_Color"));
+    //如果shader里的uniform没有使用，会被剥离，就会返回-1
+    ASSERT(location != -1);
+    GLCall(glUniform4f(location,0.8f,0.3f,0.8f,1.0f));
+
+
+    float r = 0.0f;
+    float increment = 0.05f;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
+        GLCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
 
         /* 绘制矩形 : glDrawArrays() 没有索引缓冲区时用的方法      glDrawElements()：有索引缓冲区时用的方法 */
-        //glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT,nullptr);//1-任何缓冲区，都必须由无符号的整数组成,2-已经在glBindBuffer设置，这里给nullptr
+        GLCall(glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT,nullptr));//1-任何缓冲区，都必须由无符号的整数组成,2-已经在glBindBuffer设置，这里给nullptr
         //glDrawArrays(GL_TRIANGLES,0, sizeof(positions) / 2); //0-first偏移   6-数量
         //GL_POINTS、GL_TRIANGLES、GL_LINE_STRIP。
 
+        /* 动态编颜色     太快，设置glfwSwapInterval() */
+        if (r > 1.0f)
+            increment = -0.05f;
+        else if (r < 0.0f)
+            increment = 0.05f;
+
+        r += increment;
 
         /*  错误操作 演示  */
         //GLClearError(); 
@@ -257,7 +279,7 @@ int main(void)
         //ASSERT(GLLogCall());//第二种，出现错误中断调试
 
         /* 第三种 */
-        GLCall(glDrawElements(GL_TRIANGLES, sizeof(indices), GL_INT, nullptr));
+        //GLCall(glDrawElements(GL_TRIANGLES, sizeof(indices), GL_INT, nullptr));
 
 
 
