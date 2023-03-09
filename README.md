@@ -20,4 +20,4 @@ demo-shader:着色器
   (着色器、索引缓冲、问题排查、Uniforms)
 
 
-{OpenGL学习记录}（https://www.cnblogs.com/Jieth/p/17197127.html）
+[OpenGL学习记录]（https://www.cnblogs.com/Jieth/p/17197127.html）
